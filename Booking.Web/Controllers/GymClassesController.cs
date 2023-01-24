@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Booking.Core.Entities;
 using Booking.Web.Data;
+using Booking.Data.Data;
 
 namespace Booking.Web.Controllers
 {

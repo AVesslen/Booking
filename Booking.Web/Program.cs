@@ -1,5 +1,5 @@
 using Booking.Core.Entities;
-using Booking.Web.Data;
+using Booking.Data.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
