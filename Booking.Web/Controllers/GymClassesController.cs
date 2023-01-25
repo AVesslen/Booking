@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Booking.Web.Models;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Booking.Web.Controllers
 {
@@ -44,8 +45,8 @@ namespace Booking.Web.Controllers
                 return NotFound();
             }
 
-            var gymClass = await _context.GymClass
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var gymClass = await _context.GymClass.Include(g => g.AttendingMembers).Include(g => g.ApplicationUsers)
+                                                  .FirstOrDefaultAsync(m => m.Id == id);
             if (gymClass == null)
             {
                 return NotFound();
@@ -174,7 +175,7 @@ namespace Booking.Web.Controllers
 
 
 
-       // [Authorize]
+       [Authorize]
         public async Task<IActionResult> BookingToggle(int? id) // id:t på gympasset vi vill boka
         {
             if (id == null) return BadRequest();          
@@ -188,7 +189,7 @@ namespace Booking.Web.Controllers
 
             var attending = currentGymClass?.AttendingMembers.FirstOrDefault(a => a.ApplicationUserId == userId);
 
-            // Omständigt när vi redan har id för class och user. Kan slå på nyckel i stället:
+            ////Omständigt när vi redan har id för class och user.Kan slå på nyckel i stället:
 
             //var attending = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
 
@@ -200,15 +201,19 @@ namespace Booking.Web.Controllers
                     GymClassId = (int)id
                 };
 
-                _context.ApplicationUserGymClasses.Add(booking);            
+                
+
+                _context.ApplicationUserGymClasses.Add(booking);
+
             }
             else 
             {
                 _context.ApplicationUserGymClasses.Remove(attending);
+               
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
 

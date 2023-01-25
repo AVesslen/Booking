@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Core.Entities
 {
+#nullable disable
     public class ApplicationUserGymClass
     {
         // public int Id { get; set; } behövs ej pga kompositnyckel
@@ -17,8 +18,8 @@ namespace Booking.Core.Entities
 
         // Navigation properties
 
-        public GymClass GymClass { get; set; } = new GymClass();
-        public ApplicationUser ApplicationUser { get; set; } = new ApplicationUser();
+        public GymClass GymClass { get; set; } //= new GymClass();
+        public ApplicationUser ApplicationUser { get; set; } //= new ApplicationUser();
 
     }
 }

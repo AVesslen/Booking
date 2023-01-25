@@ -14,7 +14,7 @@ namespace Booking.Data.Data
 
         //public DbSet<GymClass> GymClass { get; set; }
         public DbSet<GymClass> GymClass => Set<GymClass>();
-        //public DbSet<ApplicationUserGymClass> ApplicationUserGymClasses { get; set; }
+      
         public DbSet<ApplicationUserGymClass> ApplicationUserGymClasses => Set<ApplicationUserGymClass>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

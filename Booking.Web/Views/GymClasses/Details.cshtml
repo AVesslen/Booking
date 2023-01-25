@@ -33,12 +33,31 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AttendingMembers)
+        </dd>    
+        <dt class="col-sm-2">         
+            <span>Attending:</span>
         </dt>
+        <dd class="col-sm-10">
+         @foreach (var item in Model.AttendingMembers)       
+            {
+              @Html.DisplayFor(model => item.ApplicationUser.Email)                 
+              <br/>           
+            } 
+        </dd>
+     @*  <dd class="col-sm-10">
+            @foreach (var item in Model.ApplicationUsers)
+            {
+                @Html.DisplayFor(model => item.Email)                 
+                <br/>           
+            } 
+        </dd>*@
     </dl>
 </div>
+
+
+
+
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
