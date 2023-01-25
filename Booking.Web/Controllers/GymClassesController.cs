@@ -8,16 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using Booking.Core.Entities;
 using Booking.Web.Data;
 using Booking.Data.Data;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Booking.Web.Models;
+using System.Diagnostics;
 
 namespace Booking.Web.Controllers
 {
     public class GymClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public GymClassesController(ApplicationDbContext context)
+        public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         // GET: GymClasses
@@ -160,5 +168,57 @@ namespace Booking.Web.Controllers
         {
           return (_context.GymClass?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+
+
+
+
+
+       // [Authorize]
+        public async Task<IActionResult> BookingToggle(int? id) // id:t på gympasset vi vill boka
+        {
+            if (id == null) return BadRequest();          
+
+            var userId = userManager.GetUserId(User);  // behöver ej vara asynkront
+
+            if (userId == null) return NotFound();
+
+            var currentGymClass = await _context.GymClass.Include(g => g.AttendingMembers)
+                                                         .FirstOrDefaultAsync(g => g.Id == id);
+
+            var attending = currentGymClass?.AttendingMembers.FirstOrDefault(a => a.ApplicationUserId == userId);
+
+            // Omständigt när vi redan har id för class och user. Kan slå på nyckel i stället:
+
+            //var attending = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
+
+            if (attending == null) 
+            {
+                var booking = new ApplicationUserGymClass
+                {
+                    ApplicationUserId = userId,
+                    GymClassId = (int)id
+                };
+
+                _context.ApplicationUserGymClasses.Add(booking);            
+            }
+            else 
+            {
+                _context.ApplicationUserGymClasses.Remove(attending);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
     }
 }
