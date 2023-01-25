@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Booking.Web.Controllers
 {
+    [Authorize]
     public class GymClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,6 +31,7 @@ namespace Booking.Web.Controllers
         }
 
         // GET: GymClasses
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
               return _context.GymClass != null ? 
@@ -55,15 +57,13 @@ namespace Booking.Web.Controllers
             return View(gymClass);
         }
 
-        // GET: GymClasses/Create
+        // GET: GymClasses/Create        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: GymClasses/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: GymClasses/Create       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
@@ -77,7 +77,7 @@ namespace Booking.Web.Controllers
             return View(gymClass);
         }
 
-        // GET: GymClasses/Edit/5
+        // GET: GymClasses/Edit/5       
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.GymClass == null)
@@ -97,7 +97,7 @@ namespace Booking.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]       
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (id != gymClass.Id)
@@ -128,7 +128,7 @@ namespace Booking.Web.Controllers
             return View(gymClass);
         }
 
-        // GET: GymClasses/Delete/5
+        // GET: GymClasses/Delete/5        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.GymClass == null)
@@ -146,7 +146,7 @@ namespace Booking.Web.Controllers
             return View(gymClass);
         }
 
-        // POST: GymClasses/Delete/5
+        // POST: GymClasses/Delete/5        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -171,11 +171,7 @@ namespace Booking.Web.Controllers
         }
 
 
-
-
-
-
-       [Authorize]
+       
         public async Task<IActionResult> BookingToggle(int? id) // id:t på gympasset vi vill boka
         {
             if (id == null) return BadRequest();          
@@ -199,17 +195,13 @@ namespace Booking.Web.Controllers
                 {
                     ApplicationUserId = userId,
                     GymClassId = (int)id
-                };
-
-                
+                };                               
 
                 _context.ApplicationUserGymClasses.Add(booking);
-
             }
             else 
             {
-                _context.ApplicationUserGymClasses.Remove(attending);
-               
+                _context.ApplicationUserGymClasses.Remove(attending);               
             }
 
             await _context.SaveChangesAsync();
