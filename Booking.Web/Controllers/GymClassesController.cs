@@ -36,7 +36,8 @@ namespace Booking.Web.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.GymClass != null ? 
-                          View(await _context.GymClass.ToListAsync()) :
+                          View(await _context.GymClass.Include(g => g.AttendingMembers)
+                                                      .ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
         }
 
@@ -94,9 +95,7 @@ namespace Booking.Web.Controllers
             return View(gymClass);
         }
 
-        // POST: GymClasses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: GymClasses/Edit/5        
         [HttpPost]
         [ValidateAntiForgeryToken]       
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)

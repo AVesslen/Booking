@@ -2,10 +2,10 @@
 
 @{
     ViewData["Title"] = "Index";
-    var inAdminRole = User.IsInRole("Admin");
+    var inAdminRole = User.IsInRole("Admin");        
 }
 
-<h1>Index</h1>
+<h1>Gym classes</h1>
 
 @if (inAdminRole)
 {
@@ -46,26 +46,44 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
-            </td>
-              
+            </td>                 
+
 
                 @if (User.Identity != null && User.Identity.IsAuthenticated)  // Om inloggad
                 {
+                    string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;  // Id på den inloggade användaren
+
+
                     if (inAdminRole)
                     {
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                             <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |                       
-                            <a asp-action="BookingToggle" asp-route-id="@item.Id">Book</a>                          
-                           @* <a asp-action="BookingToggle" asp-route-id="@item.Id">Unbook</a>*@                            
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                            @if (item.AttendingMembers.Any(m => m.ApplicationUserId == userId))  // Tittar om id på den inloggade finns med bland attending members
+                            {
+                                <a asp-action="BookingToggle" asp-route-id="@item.Id">Unbook</a>
+                            }
+                            else
+                            {
+                                <a asp-action="BookingToggle" asp-route-id="@item.Id">Book</a>
+                            }
+                                              
+                                                   
                         </td>
                     }
-                    else
+                    else     // Ej admin
                     {
                        <td>
                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                           <a asp-action="BookingToggle" asp-route-id="@item.Id">Book</a> 
+                            @if (item.AttendingMembers.Any(m => m.ApplicationUserId == userId))
+                            {
+                                  <a asp-action="BookingToggle" asp-route-id="@item.Id">Unbook</a>
+                            }
+                            else
+                            {
+                                  <a asp-action="BookingToggle" asp-route-id="@item.Id">Book</a>
+                            }
                        </td>
                     }
                 }  
@@ -73,3 +91,7 @@
 }
     </tbody>
 </table>
+
+
+
+
