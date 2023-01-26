@@ -13,8 +13,10 @@ namespace Booking.Core.Entities
 
         [StringLength( maximumLength: 20,MinimumLength =2)]
         public string Name { get; set; } = string.Empty;
+
         [Required]
         public DateTime? StartTime { get; set; }
+
         [Required]
         public TimeSpan? Duration { get; set; }
 

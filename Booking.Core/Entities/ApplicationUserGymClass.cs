@@ -18,8 +18,8 @@ namespace Booking.Core.Entities
 
         // Navigation properties
 
-        public GymClass GymClass { get; set; } //= new GymClass();
-        public ApplicationUser ApplicationUser { get; set; } //= new ApplicationUser();
+        public GymClass GymClass { get; set; } 
+        public ApplicationUser ApplicationUser { get; set; } 
 
     }
 }

@@ -37,6 +37,9 @@ namespace Booking.Data.Data
                   ag => ag.HasOne(ag => ag.GymClass).WithMany(g => g.AttendingMembers),
                   ag => ag.HasOne(ag => ag.ApplicationUser).WithMany(g => g.AttendingClassess));
 
+
+            // Shadow Property
+            modelBuilder.Entity<ApplicationUser>().Property<DateTime>("TimeOfRegistration");
         }
     }
 }

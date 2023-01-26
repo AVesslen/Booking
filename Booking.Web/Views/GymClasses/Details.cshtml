@@ -37,20 +37,20 @@
         <dt class="col-sm-2">         
             <span>Attending:</span>
         </dt>
-        <dd class="col-sm-10">
+      @*  <dd class="col-sm-10">
          @foreach (var item in Model.AttendingMembers)       
             {
-              @Html.DisplayFor(model => item.ApplicationUser.Email)                 
+              @Html.DisplayFor(model => item.ApplicationUser.FullName)                 
               <br/>           
             } 
-        </dd>
-     @*  <dd class="col-sm-10">
+        </dd>*@
+       <dd class="col-sm-10">
             @foreach (var item in Model.ApplicationUsers)
             {
-                @Html.DisplayFor(model => item.Email)                 
+                @Html.DisplayFor(model => item.FullName)                 
                 <br/>           
             } 
-        </dd>*@
+        </dd>
     </dl>
 </div>
 

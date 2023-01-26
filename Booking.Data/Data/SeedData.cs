@@ -37,6 +37,9 @@ namespace Booking.Data.Data
                 throw new NullReferenceException(nameof(UserManager<ApplicationUser>));
 
 
+            //var rr = await roleManager.CreateAsync(new IdentityRole { Name = "Admin" });
+            //var r =  await userManager.AddToRoleAsync(m, "Admin");
+
             //string adminRole = "Admin";
             //await roleManager.CreateAsync(new IdentityRole(adminRole));
 
