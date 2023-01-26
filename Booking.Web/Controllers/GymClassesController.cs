@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Booking.Web.Controllers
 {
     [Authorize]
+    //[Authorize(Roles = "Admin")]
     public class GymClassesController : Controller
     {
         private readonly ApplicationDbContext _context;

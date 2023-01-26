@@ -10,6 +10,7 @@ namespace Booking.Core.Entities
     public class GymClass
     {
         public int Id { get; set; }
+
         [StringLength( maximumLength: 20,MinimumLength =2)]
         public string Name { get; set; } = string.Empty;
         [Required]
