@@ -41,6 +41,25 @@ namespace Booking.Web.Controllers
                           Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
         }
 
+
+
+        // GET: GymClasses        
+        public async Task<IActionResult> BookedClasses()
+        {
+
+            var userId = userManager.GetUserId(User);       
+
+            var attending = await _context.GymClass.Include(g => g.AttendingMembers)
+                                                   .Where(m => m.AttendingMembers.Any(a => a.ApplicationUserId == userId))
+                                                   .ToListAsync();
+
+
+            return _context.GymClass != null ?
+                        View("BookedClasses",attending) : Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
+
+        }
+
+
         // GET: GymClasses/Details/5
         public async Task<IActionResult> Details(int? id)
         {

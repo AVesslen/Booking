@@ -68,7 +68,7 @@ namespace Booking.Web.Areas.Identity.Pages.Account
 
 
             [Required]
-            [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
 
             [Display(Name = "Last name")]
             public string LastName { get; set; }
