@@ -22,13 +22,13 @@ namespace Booking.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
+       // private readonly RoleManager<IdentityRole> roleManager;
 
         public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             this.userManager = userManager;
-            this.roleManager = roleManager;
+            //this.roleManager = roleManager;
         }
 
         // GET: GymClasses

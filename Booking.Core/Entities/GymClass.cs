@@ -11,7 +11,7 @@ namespace Booking.Core.Entities
     {
         public int Id { get; set; }
 
-        [StringLength( maximumLength: 20,MinimumLength =2)]
+        [StringLength( maximumLength: 40,MinimumLength =2)]
         public string Name { get; set; } = string.Empty;
 
         [Required]

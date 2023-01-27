@@ -1,5 +1,6 @@
 using Booking.Core.Entities;
 using Booking.Data.Data;
+using Booking.Web.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,7 @@ namespace Booking.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -35,27 +36,29 @@ namespace Booking.Web
             var app = builder.Build();
 
             // Seedning
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                //db.Database.EnsureDeleted();
-                //db.Database.Migrate();
+            await app.SeedDataAsync();
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                var adminPW = "!LosenOrdSomUppfyllerKraven1";
+            //    db.Database.EnsureDeleted();
+            //    db.Database.Migrate();
 
-                try
-                {
-                    SeedData.InitAsync(db, services, adminPW);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    throw;
-                }
-            }
+            //    var adminPW = "!LosenOrdSomUppfyllerKraven1";
 
+            //    try
+            //    {
+            //        SeedData.InitAsync(db, services, adminPW);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Console.WriteLine(e.Message);
+            //        throw;
+            //    }
+            //}
+            
 
 
 
