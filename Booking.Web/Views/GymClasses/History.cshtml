@@ -1,10 +1,14 @@
 ﻿@model IEnumerable<Booking.Core.Entities.GymClass>
 
 @{
-    ViewData["Title"] = "Booked Classes";   
+    ViewData["Title"] = "History";
 }
 
-<h1>Your booked classes</h1>
+<h1>History</h1>
+
+<h4>All gym classes you have attended and whose date has passed</h4>
+
+
 
 
 <table class="table">
@@ -22,7 +26,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-            <th></th>            
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -44,21 +48,15 @@
 
 
                 @if (User.Identity != null && User.Identity.IsAuthenticated)  // Om inloggad
-                {                           
-                        <td>                            
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>   
-                        </td>                 
-                }
-                @if (item.StartTime < DateTime.Now)
                 {
-                    <td id="done">&#x2713;</td>            // Bockar av avklarade pass       
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
                 }
             </tr>
         }
     </tbody>
 </table>
-
-<p>&#x2713 - completed</p>
 
 
 

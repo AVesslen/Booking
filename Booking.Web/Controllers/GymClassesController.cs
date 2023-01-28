@@ -42,22 +42,74 @@ namespace Booking.Web.Controllers
         }
 
 
+        public async Task<IActionResult> BookingToggle(int? id) // id:t på gympasset vi vill boka
+        {
+            if (id == null) return BadRequest();
+
+            var userId = userManager.GetUserId(User);  // behöver ej vara asynkront
+
+            if (userId == null) return NotFound();
+
+            var currentGymClass = await _context.GymClass.Include(g => g.AttendingMembers)
+                                                         .FirstOrDefaultAsync(g => g.Id == id);
+
+            var attending = currentGymClass?.AttendingMembers.FirstOrDefault(a => a.ApplicationUserId == userId);
+
+            ////Men vi har redan id för class och user.Kan slå på nyckel i stället:
+
+            //var attending = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
+
+            if (attending == null)
+            {
+                var booking = new ApplicationUserGymClass
+                {
+                    ApplicationUserId = userId,
+                    GymClassId = (int)id
+                };
+
+                _context.ApplicationUserGymClasses.Add(booking);
+            }
+            else
+            {
+                _context.ApplicationUserGymClasses.Remove(attending);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+
 
         // GET: GymClasses        
         public async Task<IActionResult> BookedClasses()
         {
 
-            var userId = userManager.GetUserId(User);       
+            var userId = userManager.GetUserId(User);
 
             var attending = await _context.GymClass.Include(g => g.AttendingMembers)
                                                    .Where(m => m.AttendingMembers.Any(a => a.ApplicationUserId == userId))
+                                                   .OrderByDescending(g => g.StartTime)
+                                                   .ToListAsync();
+
+            return _context.GymClass != null ?
+                        View("BookedClasses", attending) : Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
+        }
+
+
+        public async Task<IActionResult> History()
+        {
+            var userId = userManager.GetUserId(User);
+
+            var attending = await _context.GymClass.Include(g => g.AttendingMembers)
+                                                   .Where(m => m.AttendingMembers.Any(a => a.ApplicationUserId == userId))
+                                                   .Where(g => g.StartTime < DateTime.Now)  // Vill bara ha bokade pass vars datum passerat
                                                    .ToListAsync();
 
 
             return _context.GymClass != null ?
-                        View("BookedClasses",attending) : Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
-
+                        View("History", attending) : Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
         }
+
 
 
         // GET: GymClasses/Details/5
@@ -191,41 +243,7 @@ namespace Booking.Web.Controllers
 
 
        
-        public async Task<IActionResult> BookingToggle(int? id) // id:t på gympasset vi vill boka
-        {
-            if (id == null) return BadRequest();          
-
-            var userId = userManager.GetUserId(User);  // behöver ej vara asynkront
-
-            if (userId == null) return NotFound();
-
-            var currentGymClass = await _context.GymClass.Include(g => g.AttendingMembers)
-                                                         .FirstOrDefaultAsync(g => g.Id == id);
-
-            var attending = currentGymClass?.AttendingMembers.FirstOrDefault(a => a.ApplicationUserId == userId);
-
-            ////Omständigt när vi redan har id för class och user.Kan slå på nyckel i stället:
-
-            //var attending = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
-
-            if (attending == null) 
-            {
-                var booking = new ApplicationUserGymClass
-                {
-                    ApplicationUserId = userId,
-                    GymClassId = (int)id
-                };                               
-
-                _context.ApplicationUserGymClasses.Add(booking);
-            }
-            else 
-            {
-                _context.ApplicationUserGymClasses.Remove(attending);               
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+       
 
 
 
