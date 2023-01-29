@@ -33,34 +33,11 @@ namespace Booking.Web
 
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
-
-            // Seedning
+            var app = builder.Build();            
 
             await app.SeedDataAsync();
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-            //    db.Database.EnsureDeleted();
-            //    db.Database.Migrate();
-
-            //    var adminPW = "!LosenOrdSomUppfyllerKraven1";
-
-            //    try
-            //    {
-            //        SeedData.InitAsync(db, services, adminPW);
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Console.WriteLine(e.Message);
-            //        throw;
-            //    }
-            //}
+           
             
-
-
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

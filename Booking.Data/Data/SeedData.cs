@@ -50,28 +50,6 @@ namespace Booking.Data.Data
             var admin = await AddAdminAsync(adminEmail, adminFirstName, adminLastName, adminPW);
 
             await AddToRolesAsync(admin, roleNames);
-
-
-            //var rr = await roleManager.CreateAsync(new IdentityRole { Name = "Admin" });
-            //var r =  await userManager.AddToRoleAsync(m, "Admin");
-
-            //string adminRole = "Admin";
-            //await roleManager.CreateAsync(new IdentityRole(adminRole));
-
-
-            //var adminUser = new ApplicationUser
-            //{
-            //    Email = "admin@Gymbokning.se"
-            //};
-
-            //var result = await userManager.CreateAsync(adminUser);
-            //if (result.Succeeded)
-            //{
-            //    await userManager.AddPasswordAsync(adminUser, adminPW);
-            //    await userManager.AddToRoleAsync(adminUser, adminRole);
-            //}
-
-            //await db.AddRangeAsync(adminUser);
         }
 
         private static async Task AddToRolesAsync(ApplicationUser admin, string[] roleNames)
@@ -124,21 +102,17 @@ namespace Booking.Data.Data
             Random random = new Random();
 
             string[] names = { "Spinning", "Yoga", "HIT", "Dance", "Running", "Tabata", "Step" };
-            string[] descriptions = { "Distance", "Beginners", "Hard", "70+", "Outdoor", "Intervalls", "Advanced" };
-
-            TimeSpan duration = TimeSpan.FromMinutes(50);
-            DateTime startTime = DateTime.Now;
+            string[] descriptions = { "Distance", "Beginners", "Hard", "Intervalls", "Advanced" };
+            int[] durations = { 40, 45, 50, 55 };           
 
             for (int i = 0; i < numberOfClasses; i++)
-            {
-                int index = random.Next(names.Length);
-
+            {             
                 GymClass gymClass = new GymClass
                 {
-                    Name = names[index],
-                    StartTime = startTime,
-                    Duration = duration,
-                    Description = descriptions[index]
+                    Name = names[faker.Random.Int(0, names.Length-1)],
+                    StartTime = DateTime.Now.AddDays(faker.Random.Int(-5, 5)),
+                    Duration = TimeSpan.FromMinutes(durations[faker.Random.Int(0, durations.Length-1)]),
+                    Description = descriptions[faker.Random.Int(0, descriptions.Length-1)]
                 };
 
                 gymClasses.Add(gymClass);

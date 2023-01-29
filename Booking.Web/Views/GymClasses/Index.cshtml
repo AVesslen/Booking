@@ -51,7 +51,7 @@
 
 
                 @if (User.Identity != null && User.Identity.IsAuthenticated)  // Om inloggad
-                {
+                {                    
                     string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;  // Id på den inloggade användaren
 
 

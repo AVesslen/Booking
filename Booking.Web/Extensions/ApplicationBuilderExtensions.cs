@@ -16,19 +16,18 @@ namespace Booking.Web.Extensions
                 //db.Database.EnsureDeleted();
                 //db.Database.Migrate();
 
-                //dotnet user-secrets set "AdminPW" "BytMig123!"
                 var config = serviceProvider.GetRequiredService<IConfiguration>();
-                //var adminPW = config["AdminPW"];
-                var adminPW = "BytMig123!";
+                var adminPW = config["AdminPW"];  // user-secrets
+                
                 ArgumentNullException.ThrowIfNull(adminPW, nameof(adminPW));
 
                 try
                 {
                     await SeedData.InitAsync(db, serviceProvider, adminPW);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-
+                    Console.WriteLine(ex);
                     throw;
                 }
             }

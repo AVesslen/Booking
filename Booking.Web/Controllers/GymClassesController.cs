@@ -35,9 +35,10 @@ namespace Booking.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-              return _context.GymClass != null ? 
-                          View(await _context.GymClass.Include(g => g.AttendingMembers)
-                                                      .ToListAsync()) :
+            return _context.GymClass != null ?
+                        View(await _context.GymClass.Include(g => g.AttendingMembers)
+                                                    .OrderByDescending(g => g.StartTime)
+                                                    .ToListAsync()):
                           Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
         }
 

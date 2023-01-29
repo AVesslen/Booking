@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Booking.Data.Data;
+using System.Security.Claims;
 
 namespace Booking.Web.Areas.Identity.Pages.Account
 {
@@ -109,7 +110,7 @@ namespace Booking.Web.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 
                 _context.Entry(user).Property("TimeOfRegistration").CurrentValue = DateTime.Now; // Sets the shadow property
-               
+            
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -130,7 +131,9 @@ namespace Booking.Web.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                  
+                    await _userManager.AddClaimAsync(user, new Claim("FullName", $"{user.FirstName} {user.LastName}"));
+                  
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
