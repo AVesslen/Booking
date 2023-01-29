@@ -13,6 +13,7 @@ using System.Security.Claims;
 using Booking.Web.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
+using Booking.Web.Filters;
 
 namespace Booking.Web.Controllers
 {
@@ -86,6 +87,7 @@ namespace Booking.Web.Controllers
         {
 
             var userId = userManager.GetUserId(User);
+            if (userId == null) return NotFound();
 
             var attending = await _context.GymClass.Include(g => g.AttendingMembers)
                                                    .Where(m => m.AttendingMembers.Any(a => a.ApplicationUserId == userId))
@@ -100,6 +102,7 @@ namespace Booking.Web.Controllers
         public async Task<IActionResult> History()
         {
             var userId = userManager.GetUserId(User);
+            if (userId == null) return NotFound();
 
             var attending = await _context.GymClass.Include(g => g.AttendingMembers)
                                                    .Where(m => m.AttendingMembers.Any(a => a.ApplicationUserId == userId))
@@ -114,21 +117,11 @@ namespace Booking.Web.Controllers
 
 
         // GET: GymClasses/Details/5
+        [RequiredParameterRequiredModel("id")]
         public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.GymClass == null)
-            {
-                return NotFound();
-            }
-
-            var gymClass = await _context.GymClass.Include(g => g.AttendingMembers).Include(g => g.ApplicationUsers)
-                                                  .FirstOrDefaultAsync(m => m.Id == id);
-            if (gymClass == null)
-            {
-                return NotFound();
-            }
-
-            return View(gymClass);
+        {       
+            return View(await _context.GymClass.Include(g => g.AttendingMembers).Include(g => g.ApplicationUsers)
+                                                  .FirstOrDefaultAsync(m => m.Id == id));
         }
 
         // GET: GymClasses/Create        
@@ -151,20 +144,11 @@ namespace Booking.Web.Controllers
             return View(gymClass);
         }
 
-        // GET: GymClasses/Edit/5       
+        // GET: GymClasses/Edit/5
+        [RequiredParameterRequiredModel("id")]
         public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.GymClass == null)
-            {
-                return NotFound();
-            }
-
-            var gymClass = await _context.GymClass.FindAsync(id);
-            if (gymClass == null)
-            {
-                return NotFound();
-            }
-            return View(gymClass);
+        {                
+            return View(await _context.GymClass.FindAsync(id));
         }
 
         // POST: GymClasses/Edit/5        
