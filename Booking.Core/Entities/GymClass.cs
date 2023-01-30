@@ -17,8 +17,7 @@ namespace Booking.Core.Entities
         [Required]
         public DateTime? StartTime { get; set; }
 
-        [Required]
-        [DisplayFormat]
+        [Required]        
         public TimeSpan? Duration { get; set; }
 
         public DateTime? EndTime => StartTime + Duration;

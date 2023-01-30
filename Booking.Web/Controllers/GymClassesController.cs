@@ -172,12 +172,13 @@ namespace Booking.Web.Controllers
             {
                 _context.Add(gymClass);
                 await _context.SaveChangesAsync();
-                return Request.IsAjax() ? PartialView("GymClassesPartial", await _context.GymClass.ToListAsync()) :RedirectToAction(nameof(Index));
+                return Request.IsAjax() ? PartialView("GymClassPartial", gymClass) : RedirectToAction(nameof(Index));
             }
 
             if(Request.IsAjax())
             {
-                return StatusCode(StatusCodes.Status400BadRequest);
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return PartialView("CreatePartial", gymClass); 
             }
             return View(gymClass);
         }

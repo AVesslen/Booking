@@ -1,0 +1,54 @@
+﻿@model GymClass
+
+<tr>
+    <td>
+        @Html.DisplayFor(model => model.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.StartTime)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Duration)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Description)
+    </td>
+
+
+    @if (User.Identity != null && User.Identity.IsAuthenticated)  // Om inloggad
+    {
+        string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;  // Id på den inloggade användaren
+
+
+        if (User.IsInRole("Admin"))
+        {
+            <td>
+                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@Model.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+                @if (Model.AttendingMembers.Any(m => m.ApplicationUserId == userId))  // Tittar om id på den inloggade finns med bland attending members
+                {
+                    <a asp-action="BookingToggle" asp-route-id="@Model.Id">Unbook</a>
+                }
+                else
+                {
+                    <a asp-action="BookingToggle" asp-route-id="@Model.Id">Book</a>
+                }
+            </td>
+        }
+        else     // Ej admin
+        {
+            <td>
+                <a asp-action="Details" asp-route-id="@Model.Id">Details</a> |
+                @if (Model.AttendingMembers.Any(m => m.ApplicationUserId == userId))
+                {
+                    <a asp-action="BookingToggle" asp-route-id="@Model.Id">Unbook</a>
+                }
+                else
+                {
+                    <a asp-action="BookingToggle" asp-route-id="@Model.Id">Book</a>
+                }
+            </td>
+        }
+    }
+</tr>

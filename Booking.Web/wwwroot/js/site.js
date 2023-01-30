@@ -9,6 +9,12 @@ function removeForm() {
     createForm.innerHTML = "";
 }
 
-function fail() {
-    console.log('Model error, check input');
+function fail(response) {
+    console.log(response, 'Model error, check input');
+    createForm.innerHTML = response.responseText;
+}
+
+function fixValidation() {
+    const form = createForm.querySelector('form');
+    $validator.unobtrusive.parse(form);
 }
