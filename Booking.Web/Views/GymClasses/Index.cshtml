@@ -5,13 +5,22 @@
     var inAdminRole = User.IsInRole("Admin");        
 }
 
+
 <h1>Gym classes</h1>
 
+<div id="createajax"></div>
 
 @if (inAdminRole)
 {
 <p>
-    <a asp-action="Create">Create New</a>
+   @* <a asp-action="Create">Create New original</a>*@
+    <a asp-action="Create" class="btn btn-outline-success" 
+        data-ajax="true"
+        data-ajax-method="GET"
+        data-ajax-update="#createajax"
+        data-ajax-mode="replace"        
+        
+    >Create New</a>
 </p>
 }
 
@@ -33,7 +42,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="gymClasses">@*
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -89,7 +98,8 @@
                     }
                 }  
         </tr>
-}
+        }*@
+        <partial name="GymClassesPartial" />
     </tbody>
 </table>
 

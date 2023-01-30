@@ -160,6 +160,7 @@ namespace Booking.Web.Areas.Identity.Pages.Account
             {
                 return Activator.CreateInstance<ApplicationUser>();
             }
+            
             catch
             {
                 throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +

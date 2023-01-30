@@ -14,6 +14,8 @@ using Booking.Web.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Booking.Web.Filters;
+using Booking.Web.Extensions;
+using Booking.Core.ViewModels;
 
 namespace Booking.Web.Controllers
 {
@@ -39,9 +41,33 @@ namespace Booking.Web.Controllers
             return _context.GymClass != null ?
                         View(await _context.GymClass.Include(g => g.AttendingMembers)
                                                     .OrderByDescending(g => g.StartTime)
-                                                    .ToListAsync()):
+                                                    .ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
         }
+
+
+        //// GET: GymClasses
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Index()
+        //{
+
+        //    var userId = userManager.GetUserId(User);
+
+        //    var model = _context.GymClass.Include(g => g.AttendingMembers)
+        //                                 .Select(g => new GymClassesViewModel
+        //                                 {
+        //                                     Id = g.Id,
+        //                                     Name = g.Name,
+        //                                     Duration= g.Duration,
+        //                                     StartTime= g.StartTime,
+        //                                     Attending = g.AttendingMembers.Any(a => a.ApplicationUserId == userId)
+        //                                 }).ToList();
+        //    return _context.GymClass != null ?
+        //                View(await _context.GymClass.Include(g => g.AttendingMembers)
+        //                                            .OrderByDescending(g => g.StartTime)
+        //                                            .ToListAsync()) :
+        //                  Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
+        //}
 
 
         public async Task<IActionResult> BookingToggle(int? id) // id:t på gympasset vi vill boka
@@ -124,10 +150,17 @@ namespace Booking.Web.Controllers
                                                   .FirstOrDefaultAsync(m => m.Id == id));
         }
 
-        // GET: GymClasses/Create        
+        // GET: GymClasses/Create
+        // [Authorize(Roles = "Admin")]
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            return View();
+            return Request.IsAjax() ? PartialView("CreatePartial") : View();
         }
 
         // POST: GymClasses/Create       
@@ -139,7 +172,12 @@ namespace Booking.Web.Controllers
             {
                 _context.Add(gymClass);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Request.IsAjax() ? PartialView("GymClassesPartial", await _context.GymClass.ToListAsync()) :RedirectToAction(nameof(Index));
+            }
+
+            if(Request.IsAjax())
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
             }
             return View(gymClass);
         }
