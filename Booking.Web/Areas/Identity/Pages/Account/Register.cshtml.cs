@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Booking.Data.Data;
 using System.Security.Claims;
+using Booking.Web.Validations;
 
 namespace Booking.Web.Areas.Identity.Pages.Account
 {
@@ -69,8 +70,8 @@ namespace Booking.Web.Areas.Identity.Pages.Account
 
 
             [Required]
+            [NameCheck(ErrorMessage = "Last name can't be the same as first name")]
             [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-
             [Display(Name = "Last name")]
             public string LastName { get; set; }
 
