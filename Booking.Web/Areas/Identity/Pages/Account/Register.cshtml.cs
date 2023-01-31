@@ -115,8 +115,9 @@ namespace Booking.Web.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                var addToRoleResult = await _userManager.AddToRoleAsync(user, "Member");
 
-                if (result.Succeeded)
+                if (result.Succeeded && addToRoleResult.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
@@ -132,7 +133,7 @@ namespace Booking.Web.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                   
-                    await _userManager.AddClaimAsync(user, new Claim("FullName", $"{user.FirstName} {user.LastName}"));
+                    await _userManager.AddClaimAsync(user, new Claim("FullName", $"{user.FirstName} {user.LastName}")); // Lägger till Claim
                   
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -140,7 +141,7 @@ namespace Booking.Web.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        //await _signInManager.SignInAsync(user, isPersistent: false); // Vill ej logga in automatiskt efter registrering
                         return LocalRedirect(returnUrl);
                     }
                 }

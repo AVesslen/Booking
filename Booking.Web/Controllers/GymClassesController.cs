@@ -20,7 +20,7 @@ using Booking.Core.ViewModels;
 namespace Booking.Web.Controllers
 {
     [Authorize]
-    //[Authorize(Roles = "Admin")]
+   
     public class GymClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -103,9 +103,7 @@ namespace Booking.Web.Controllers
             return RedirectToAction("Index");
         }
 
-
-
-        // GET: GymClasses        
+       
         public async Task<IActionResult> BookedClasses()
         {
 
@@ -139,7 +137,7 @@ namespace Booking.Web.Controllers
 
 
 
-        // GET: GymClasses/Details/5
+        // GET: GymClasses/Details/5  
         [RequiredParameterRequiredModel("id")]
         public async Task<IActionResult> Details(int? id)
         {       
@@ -148,12 +146,6 @@ namespace Booking.Web.Controllers
         }
 
         // GET: GymClasses/Create
-        // [Authorize(Roles = "Admin")]
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -162,6 +154,7 @@ namespace Booking.Web.Controllers
 
         // POST: GymClasses/Create       
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
@@ -180,8 +173,10 @@ namespace Booking.Web.Controllers
             return View(gymClass);
         }
 
+
         // GET: GymClasses/Edit/5
         [RequiredParameterRequiredModel("id")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {                
             return View(await _context.GymClass.FindAsync(id));
@@ -189,7 +184,8 @@ namespace Booking.Web.Controllers
 
         // POST: GymClasses/Edit/5        
         [HttpPost]
-        [ValidateAntiForgeryToken]       
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (id != gymClass.Id)
@@ -220,7 +216,8 @@ namespace Booking.Web.Controllers
             return View(gymClass);
         }
 
-        // GET: GymClasses/Delete/5        
+        // GET: GymClasses/Delete/5
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.GymClass == null)
@@ -241,6 +238,7 @@ namespace Booking.Web.Controllers
         // POST: GymClasses/Delete/5        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.GymClass == null)
