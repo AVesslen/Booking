@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -58,6 +59,7 @@ namespace Booking.Data.Data
             {
                 if (await userManager.IsInRoleAsync(admin, roleName)) continue;
                 var result = await userManager.AddToRoleAsync(admin, roleName);
+                
                 if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
             }
         }
@@ -77,6 +79,8 @@ namespace Booking.Data.Data
             };
 
             var result = await userManager.CreateAsync(admin, adminPW);
+            await userManager.AddClaimAsync(admin, new Claim("FullName", $"{admin.FirstName} {admin.LastName}"));  // Lägger till Claim för FullName
+
             if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
 
             return admin;

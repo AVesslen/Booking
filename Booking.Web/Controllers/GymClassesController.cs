@@ -24,14 +24,12 @@ namespace Booking.Web.Controllers
     public class GymClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> userManager;
-       // private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<ApplicationUser> userManager;      
 
         public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
-            this.userManager = userManager;
-            //this.roleManager = roleManager;
+            this.userManager = userManager;            
         }
 
         // GET: GymClasses
@@ -83,8 +81,7 @@ namespace Booking.Web.Controllers
 
             var attending = currentGymClass?.AttendingMembers.FirstOrDefault(a => a.ApplicationUserId == userId);
 
-            ////Men vi har redan id för class och user.Kan slå på nyckel i stället:
-
+            // Kan slå på nyckel i stället:
             //var attending = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
 
             if (attending == null)

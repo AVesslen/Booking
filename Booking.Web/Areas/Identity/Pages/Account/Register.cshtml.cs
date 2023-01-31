@@ -108,8 +108,7 @@ namespace Booking.Web.Areas.Identity.Pages.Account
                 var user = CreateUser();
 
                 user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;
-                
+                user.LastName = Input.LastName;                
                 _context.Entry(user).Property("TimeOfRegistration").CurrentValue = DateTime.Now; // Sets the shadow property
             
 
